@@ -10,6 +10,7 @@ export const DEFAULT_CONFIG = {
   show_power: true,
   show_energy: true,
   show_wrinkle_prevent_control: true,
+  finished_green_duration: 60,
   icons: {
     appliance: "mdi:tumble-dryer",
     start: "mdi:play",

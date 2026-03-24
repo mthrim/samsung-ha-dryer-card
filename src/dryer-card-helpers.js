@@ -112,6 +112,23 @@ export function getSecondaryStatus(machineState, jobState) {
   return "Ready";
 }
 
+export function isFinishedRecently(machineStateEntity, durationMinutes) {
+  if (!machineStateEntity || machineStateEntity.state !== "stop") {
+    return false;
+  }
+
+  if (!durationMinutes) {
+    return true;
+  }
+
+  const lastChanged = new Date(machineStateEntity.last_changed);
+  if (Number.isNaN(lastChanged.getTime())) {
+    return true;
+  }
+
+  return Date.now() - lastChanged.getTime() <= durationMinutes * 60_000;
+}
+
 export function shouldShowCompletionTime(machineState, completionValue) {
   return !isUnavailable(completionValue) &&
     (machineState === "run" || machineState === "pause");

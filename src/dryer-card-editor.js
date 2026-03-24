@@ -239,6 +239,12 @@ export class SamsungHADryerCardEditor extends LitElement {
       <div class="section">
         <div class="section-title">Display Options</div>
         ${BOOLEAN_FIELDS.map((field) => this._renderSwitch(field.label, field.key))}
+        ${this._renderTextField(
+          "Green highlight duration (minutes)",
+          this._config.finished_green_duration != null ? String(this._config.finished_green_duration) : "",
+          (e) => this._updateField("finished_green_duration", e.target.value === "" ? undefined : Number(e.target.value)),
+          "How long the card stays green after finishing (0 = always)"
+        )}
       </div>
 
       <div class="section">

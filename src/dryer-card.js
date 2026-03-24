@@ -8,6 +8,7 @@ import {
   getPrimaryStatus,
   getSecondaryStatus,
   shouldShowCompletionTime,
+  isFinishedRecently,
   formatTimestamp,
   formatNumber
 } from "./dryer-card-helpers";
@@ -551,10 +552,11 @@ export class SamsungHADryerCard extends LitElement {
     const config = this._config;
     const entities = buildEntityMap(config);
 
-    const machineState = getStateValue(
+    const machineStateEntity = getEntityState(
       this.hass,
       entities[ENTITY_KEYS.machineState]
     );
+    const machineState = machineStateEntity ? machineStateEntity.state : undefined;
     const jobState = getStateValue(
       this.hass,
       entities[ENTITY_KEYS.jobState]
@@ -614,7 +616,7 @@ export class SamsungHADryerCard extends LitElement {
       .join(" ");
 
     return html`
-      <ha-card class=${isStopped ? "finished" : ""}>
+      <ha-card class=${isFinishedRecently(machineStateEntity, config.finished_green_duration) ? "finished" : ""}>
         <div class="card">
           ${this.renderHeader(config, secondaryStatus)}
 
