@@ -158,13 +158,10 @@ These are not currently available in Home Assistant.
 
 ## 🙌 Credits
 
-Based on and inspired by the Samsung washer card by
-[@raulpetruta](https://github.com/raulpetruta).
-
-Original project:
-https://github.com/raulpetruta/samsung-ha-washer-card
-
-Portions of logic and structure were adapted for dryer support.
+Based on the Samsung dryer card by
+[@kingchddg901](https://github.com/kingchddg901/samsung-ha-dryer-card),
+which was itself inspired by the Samsung washer card by
+[@raulpetruta](https://github.com/raulpetruta/samsung-ha-washer-card).
 
 ---
 
