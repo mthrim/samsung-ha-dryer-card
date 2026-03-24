@@ -11,6 +11,10 @@ export const DEFAULT_CONFIG = {
   show_energy: true,
   show_wrinkle_prevent_control: true,
   finished_green_duration: 60,
+  completion_color_threshold_1: 50,
+  completion_color_1: "var(--primary-text-color)",
+  completion_color_threshold_2: 30,
+  completion_color_2: "var(--primary-text-color)",
   icons: {
     appliance: "mdi:tumble-dryer",
     start: "mdi:play",
