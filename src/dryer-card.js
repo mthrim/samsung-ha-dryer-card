@@ -429,6 +429,13 @@ export class SamsungHADryerCard extends LitElement {
       color: var(--secondary-text-color);
     }
 
+    ha-card.finished {
+      background:
+        radial-gradient(circle at top right, rgba(255, 255, 255, 0.10), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(255, 255, 255, 0.05), transparent 28%),
+        linear-gradient(180deg, #1a3d2a 0%, #112a1c 100%);
+    }
+
     @keyframes spin {
       from {
         transform: rotate(0deg);
@@ -607,7 +614,7 @@ export class SamsungHADryerCard extends LitElement {
       .join(" ");
 
     return html`
-      <ha-card>
+      <ha-card class=${isStopped ? "finished" : ""}>
         <div class="card">
           ${this.renderHeader(config, secondaryStatus)}
 

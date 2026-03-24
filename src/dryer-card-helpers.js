@@ -85,15 +85,11 @@ export function getPrimaryStatus(machineState, jobState) {
     return JOB_STATE_LABELS[jobState] || MACHINE_STATE_LABELS[machineState] || "Running";
   }
 
-  if (machineState === "stop" && jobState === "finished") {
+  if (machineState === "stop") {
     return "Finished";
   }
 
-  if (machineState === "stop" && jobState && jobState !== "none") {
-    return JOB_STATE_LABELS[jobState] || "Stopped";
-  }
-
-  return MACHINE_STATE_LABELS[machineState] || titleCaseLabel(machineState) || "Stopped";
+  return MACHINE_STATE_LABELS[machineState] || titleCaseLabel(machineState) || "Finished";
 }
 
 export function getSecondaryStatus(machineState, jobState) {
@@ -133,12 +129,14 @@ export function formatTimestamp(hass, value) {
 
   try {
     return new Intl.DateTimeFormat(hass.locale?.language || "en-US", {
-      hour: "numeric",
+      hour: "2-digit",
+      hour12: false,
       minute: "2-digit"
     }).format(date);
   } catch (_err) {
     return date.toLocaleTimeString([], {
-      hour: "numeric",
+      hour: "2-digit",
+      hour12: false,
       minute: "2-digit"
     });
   }
