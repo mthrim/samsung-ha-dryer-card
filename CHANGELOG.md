@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-03-24 (3)
+- `dryer-card.js` — label reverts to "Stopped" when green highlight duration has expired
+
 ## 2026-03-24 (2)
 - `dryer-card-constants.js` — added `finished_green_duration` config option (default 60 minutes)
 - `dryer-card-helpers.js` — added `isFinishedRecently()`: checks `last_changed` timestamp against configured duration

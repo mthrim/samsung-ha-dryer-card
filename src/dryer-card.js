@@ -574,9 +574,12 @@ export class SamsungHADryerCard extends LitElement {
       entities[ENTITY_KEYS.cycleEnergy]
     );
 
-    const primaryStatus = getPrimaryStatus(machineState, jobState);
-    const secondaryStatus = getSecondaryStatus(machineState, jobState);
     const { isRunning, isPaused, isStopped } = this.getStateFlags(machineState);
+    const isGreen = isFinishedRecently(machineStateEntity, config.finished_green_duration);
+    const primaryStatus = isStopped && !isGreen
+      ? "Stopped"
+      : getPrimaryStatus(machineState, jobState);
+    const secondaryStatus = getSecondaryStatus(machineState, jobState);
 
     const showCompletion =
       config.show_completion_time &&
@@ -616,7 +619,7 @@ export class SamsungHADryerCard extends LitElement {
       .join(" ");
 
     return html`
-      <ha-card class=${isFinishedRecently(machineStateEntity, config.finished_green_duration) ? "finished" : ""}>
+      <ha-card class=${isGreen ? "finished" : ""}>
         <div class="card">
           ${this.renderHeader(config, secondaryStatus)}
 
