@@ -159,14 +159,7 @@ export function formatTimestamp(hass, value) {
   }
 }
 
-export function getCompletionColor(powerState, completion, config) {
-  const t1 = config.completion_color_threshold_1;
-  const c1 = config.completion_color_1;
-  const t2 = config.completion_color_threshold_2;
-  const c2 = config.completion_color_2;
-
-  if ((!t1 && t1 !== 0 && !t2 && t2 !== 0) || (!c1 && !c2)) return null;
-
+export function getCompletionPercent(powerState, completion) {
   const startStr = powerState?.attributes?.power_consumption_start;
   if (!startStr || !completion) return null;
 
@@ -176,7 +169,19 @@ export function getCompletionColor(powerState, completion, config) {
 
   if (Number.isNaN(start) || Number.isNaN(end) || end <= start) return null;
 
-  const percentRemaining = Math.max(0, Math.min(100, ((end - now) / (end - start)) * 100));
+  return Math.max(0, Math.min(100, ((end - now) / (end - start)) * 100));
+}
+
+export function getCompletionColor(powerState, completion, config) {
+  const t1 = config.completion_color_threshold_1;
+  const c1 = config.completion_color_1;
+  const t2 = config.completion_color_threshold_2;
+  const c2 = config.completion_color_2;
+
+  if ((!t1 && t1 !== 0 && !t2 && t2 !== 0) || (!c1 && !c2)) return null;
+
+  const percentRemaining = getCompletionPercent(powerState, completion);
+  if (percentRemaining === null) return null;
 
   const thresholds = [];
   if (t1 != null && c1) thresholds.push({ threshold: Number(t1), color: c1 });

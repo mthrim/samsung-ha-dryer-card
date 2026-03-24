@@ -20,7 +20,8 @@ const BOOLEAN_FIELDS = [
   { key: "show_status_chips", label: "Show status chips" },
   { key: "show_power", label: "Show power" },
   { key: "show_energy", label: "Show cycle energy" },
-  { key: "show_wrinkle_prevent_control", label: "Show wrinkle prevent control" }
+  { key: "show_wrinkle_prevent_control", label: "Show wrinkle prevent control" },
+  { key: "show_drum_progress", label: "Show drum progress fill" }
 ];
 
 const ICON_FIELDS = [
@@ -279,6 +280,12 @@ export class SamsungHADryerCardEditor extends LitElement {
       <div class="section">
         <div class="section-title">Display Options</div>
         ${BOOLEAN_FIELDS.map((field) => this._renderSwitch(field.label, field.key))}
+        ${this._renderTextField(
+          "Drum progress color (hex)",
+          this._config.drum_progress_color,
+          (e) => this._updateField("drum_progress_color", e.target.value),
+          "Color of the progress fill inside the drum circle"
+        )}
         ${this._renderTextField(
           "Green highlight duration (minutes)",
           this._config.finished_green_duration != null ? String(this._config.finished_green_duration) : "",

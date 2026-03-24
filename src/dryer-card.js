@@ -11,7 +11,8 @@ import {
   isFinishedRecently,
   formatTimestamp,
   formatNumber,
-  getCompletionColor
+  getCompletionColor,
+  getCompletionPercent
 } from "./dryer-card-helpers";
 import { ENTITY_KEYS, CARD_TAG } from "./dryer-card-constants";
 import { setDryerCommand, toggleSwitch } from "./dryer-card-actions";
@@ -163,13 +164,32 @@ export class SamsungHADryerCard extends LitElement {
     }
 
     .drum-wrap {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
+    .drum-progress {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      opacity: 0.55;
+      pointer-events: none;
+    }
+
+    .hero.compact .drum-progress {
+      width: 88px;
+      height: 88px;
+    }
+
     .drum {
       position: relative;
+      z-index: 1;
       width: 140px;
       height: 140px;
       border-radius: 50%;
@@ -515,7 +535,7 @@ export class SamsungHADryerCard extends LitElement {
     `;
   }
 
-  renderHero(config, primaryStatus, secondaryStatus, showCompletion, completion, drumClass, completionColor) {
+  renderHero(config, primaryStatus, secondaryStatus, showCompletion, completion, drumClass, completionColor, drumProgressStyle) {
     const heroClass = `hero ${config.layout_mode === "compact" ? "compact" : ""}`;
     const completionStyle = completionColor
       ? `color: ${completionColor};`
@@ -524,6 +544,9 @@ export class SamsungHADryerCard extends LitElement {
     return html`
       <div class=${heroClass}>
         <div class="drum-wrap">
+          ${drumProgressStyle
+            ? html`<div class="drum-progress" style=${drumProgressStyle}></div>`
+            : ""}
           <div class=${drumClass}>
             <div class="drum-center">
               <ha-icon .icon=${config.icons.appliance}></ha-icon>
@@ -593,6 +616,14 @@ export class SamsungHADryerCard extends LitElement {
       ? getCompletionColor(powerState, completion, config)
       : null;
 
+    const drumProgressStyle = (() => {
+      if (!config.show_drum_progress || (!isRunning && !isPaused)) return null;
+      const pct = getCompletionPercent(powerState, completion);
+      if (pct === null) return null;
+      const color = config.drum_progress_color || "#5b9cf6";
+      return `background: conic-gradient(from -90deg, ${color} ${pct}%, transparent ${pct}%);`;
+    })();
+
     const wrinklePreventActive = isOn(
       this.hass,
       entities[ENTITY_KEYS.wrinklePreventActive]
@@ -638,7 +669,8 @@ export class SamsungHADryerCard extends LitElement {
             showCompletion,
             completion,
             drumClass,
-            completionColor
+            completionColor,
+            drumProgressStyle
           )}
 
           ${config.show_status_chips
