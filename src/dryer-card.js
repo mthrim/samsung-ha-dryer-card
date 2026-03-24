@@ -10,7 +10,8 @@ import {
   shouldShowCompletionTime,
   isFinishedRecently,
   formatTimestamp,
-  formatNumber
+  formatNumber,
+  getCompletionColor
 } from "./dryer-card-helpers";
 import { ENTITY_KEYS, CARD_TAG } from "./dryer-card-constants";
 import { setDryerCommand, toggleSwitch } from "./dryer-card-actions";
@@ -514,8 +515,11 @@ export class SamsungHADryerCard extends LitElement {
     `;
   }
 
-  renderHero(config, primaryStatus, secondaryStatus, showCompletion, completion, drumClass) {
+  renderHero(config, primaryStatus, secondaryStatus, showCompletion, completion, drumClass, completionColor) {
     const heroClass = `hero ${config.layout_mode === "compact" ? "compact" : ""}`;
+    const completionStyle = completionColor
+      ? `color: ${completionColor};`
+      : "";
 
     return html`
       <div class=${heroClass}>
@@ -533,7 +537,7 @@ export class SamsungHADryerCard extends LitElement {
 
           ${showCompletion
             ? html`
-                <div class="completion">
+                <div class="completion" style=${completionStyle}>
                   <ha-icon .icon=${config.icons.complete}></ha-icon>
                   <span>Completes at ${formatTimestamp(this.hass, completion)}</span>
                 </div>
@@ -585,6 +589,10 @@ export class SamsungHADryerCard extends LitElement {
       config.show_completion_time &&
       shouldShowCompletionTime(machineState, completion);
 
+    const completionColor = showCompletion
+      ? getCompletionColor(powerState, completion, config)
+      : null;
+
     const wrinklePreventActive = isOn(
       this.hass,
       entities[ENTITY_KEYS.wrinklePreventActive]
@@ -629,7 +637,8 @@ export class SamsungHADryerCard extends LitElement {
             secondaryStatus,
             showCompletion,
             completion,
-            drumClass
+            drumClass,
+            completionColor
           )}
 
           ${config.show_status_chips

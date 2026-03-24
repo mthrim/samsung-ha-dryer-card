@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-03-24 (4)
+- `dryer-card-helpers.js` — added `getCompletionColor()`: computes % remaining using `power_consumption_start` + `completion_time`, returns threshold-matched hex color
+- `dryer-card.js` — completion time badge now accepts an inline color via `completionColor` prop
+- `dryer-card-editor.js` — added "Completion Time Colors" section with two configurable threshold/color pairs (`completion_color_threshold_1/2`, `completion_color_1/2`)
+
 ## 2026-03-24 (3)
 - `dryer-card.js` — label reverts to "Stopped" when green highlight duration has expired
 

@@ -76,6 +76,17 @@ export class SamsungHADryerCardEditor extends LitElement {
       gap: 12px;
     }
 
+    .threshold-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .threshold-row:last-child {
+      margin-bottom: 0;
+    }
+
     .select-field {
       display: flex;
       flex-direction: column;
@@ -197,6 +208,35 @@ export class SamsungHADryerCardEditor extends LitElement {
     `;
   }
 
+  _renderThresholdColorRow(index) {
+    const thresholdKey = `completion_color_threshold_${index}`;
+    const colorKey = `completion_color_${index}`;
+    const thresholdVal = this._config[thresholdKey];
+    const colorVal = this._config[colorKey] || "";
+
+    return html`
+      <div class="threshold-row">
+        <ha-textfield
+          .label=${`Threshold ${index} (%)`}
+          .value=${thresholdVal != null ? String(thresholdVal) : ""}
+          type="number"
+          min="0"
+          max="100"
+          @input=${(e) => {
+            const val = e.target.value;
+            this._updateField(thresholdKey, val === "" ? undefined : Number(val));
+          }}
+        ></ha-textfield>
+        <ha-textfield
+          .label=${`Color ${index} (hex)`}
+          .value=${colorVal}
+          placeholder="#RRGGBB"
+          @input=${(e) => this._updateField(colorKey, e.target.value)}
+        ></ha-textfield>
+      </div>
+    `;
+  }
+
   _renderLayoutModeField() {
     return html`
       <div class="field">
@@ -245,6 +285,15 @@ export class SamsungHADryerCardEditor extends LitElement {
           (e) => this._updateField("finished_green_duration", e.target.value === "" ? undefined : Number(e.target.value)),
           "How long the card stays green after finishing (0 = always)"
         )}
+      </div>
+
+      <div class="section">
+        <div class="section-title">Completion Time Colors</div>
+        <div class="field" style="color: var(--secondary-text-color); font-size: 0.85rem; margin-bottom: 12px;">
+          Color the remaining-time badge when below a % threshold. Leave blank to use the default color.
+        </div>
+        ${this._renderThresholdColorRow(1)}
+        ${this._renderThresholdColorRow(2)}
       </div>
 
       <div class="section">

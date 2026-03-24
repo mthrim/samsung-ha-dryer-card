@@ -1,6 +1,6 @@
 {
   "name": "samsung-ha-dryer-card",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Samsung SmartThings Dryer Card for Home Assistant",
   "author": "Christopher King",
   "license": "MIT",
