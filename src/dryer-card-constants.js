@@ -14,9 +14,7 @@ export const DEFAULT_CONFIG = {
   show_drum_progress: true,
   drum_progress_color: "#5b9cf6",
   completion_color_threshold_1: 50,
-  completion_color_1: "var(--primary-text-color)",
   completion_color_threshold_2: 30,
-  completion_color_2: "var(--primary-text-color)",
   icons: {
     appliance: "mdi:tumble-dryer",
     start: "mdi:play",
@@ -48,7 +46,7 @@ export const JOB_STATE_LABELS = {
   cooling: "Cooling",
   delay_wash: "Delayed",
   drying: "Drying",
-  finished: "Finished",
+  finish: "Finished",
   none: "Idle",
   refreshing: "Refreshing",
   weight_sensing: "Sensing Load",

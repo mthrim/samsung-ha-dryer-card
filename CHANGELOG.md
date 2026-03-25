@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-03-25 (3)
+- `dryer-card.js` — fix drum progress fill direction: now fills up as cycle progresses (0% → 100%) instead of draining down
+- `dryer-card-constants.js` — remove redundant `completion_color_1/2` defaults (`var(--primary-text-color)` is the natural badge color); fix `finished` → `finish` in `JOB_STATE_LABELS` to match HA enum
+- `dryer-card-helpers.js` — fix `"finished"` → `"finish"` in `getSecondaryStatus` job state check
+
 ## 2026-03-25 (2)
 - `dryer-card-constants.js` — added `show_drum_progress` (default: true) and `drum_progress_color` (default: `#5b9cf6`)
 - `dryer-card-helpers.js` — extracted `getCompletionPercent()` shared helper; refactored `getCompletionColor()` to use it
