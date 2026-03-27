@@ -268,16 +268,16 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 140px;
-      height: 140px;
+      width: 200px;
+      height: 200px;
       border-radius: 50%;
       opacity: 0.55;
       pointer-events: none;
     }
 
     .hero.compact .drum-progress {
-      width: 88px;
-      height: 88px;
+      width: 128px;
+      height: 128px;
     }
 
     .drum {
@@ -637,7 +637,7 @@
           <div class="secondary-status">${i}</div>
         </div>
       </div>
-    `}render(){if(!this.hass||!this._config)return u``;let e=this._config,t=qe(e),i=D(this.hass,t[h.machineState]),o=i?i.state:void 0,s=Y(this.hass,t[h.jobState]),n=Y(this.hass,t[h.completionTime]),l=D(this.hass,t[h.power]),a=D(this.hass,t[h.cycleEnergy]),{isRunning:d,isPaused:p,isStopped:c}=this.getStateFlags(o),g=Qe(i,e.finished_green_duration),_=c&&!g?"Stopped":Je(o,s),S=Ze(o,s),Q=e.show_completion_time&&Xe(o,n),st=Q?it(l,n,e):null,nt=(()=>{if(!e.show_drum_progress||!d&&!p)return null;let Se=ge(l,n);if(Se===null)return null;let lt=e.drum_progress_color||"#5b9cf6",Ee=10+(100-Se)*.9;return`background: radial-gradient(circle, ${lt} ${Ee}%, transparent ${Ee}%);`})(),be=I(this.hass,t[h.wrinklePreventActive]),$e=I(this.hass,t[h.wrinklePreventSwitch]),ve=I(this.hass,t[h.childLock]),we=I(this.hass,t[h.remoteControl]),xe=l?_e(this.hass,l.state,l.attributes.unit_of_measurement):"",Ae=a?_e(this.hass,a.state,a.attributes.unit_of_measurement):"",at=["drum",d?"running":""].filter(Boolean).join(" ");return u`
+    `}render(){if(!this.hass||!this._config)return u``;let e=this._config,t=qe(e),i=D(this.hass,t[h.machineState]),o=i?i.state:void 0,s=Y(this.hass,t[h.jobState]),n=Y(this.hass,t[h.completionTime]),l=D(this.hass,t[h.power]),a=D(this.hass,t[h.cycleEnergy]),{isRunning:d,isPaused:p,isStopped:c}=this.getStateFlags(o),g=Qe(i,e.finished_green_duration),_=c&&!g?"Stopped":Je(o,s),S=Ze(o,s),Q=e.show_completion_time&&Xe(o,n),st=Q?it(l,n,e):null,nt=(()=>{if(!e.show_drum_progress||!d&&!p)return null;let Se=ge(l,n);if(Se===null)return null;let lt=e.drum_progress_color||"#5b9cf6",Ee=65+(100-Se)*.35;return`background: radial-gradient(circle, ${lt} ${Ee}%, transparent ${Ee}%);`})(),be=I(this.hass,t[h.wrinklePreventActive]),$e=I(this.hass,t[h.wrinklePreventSwitch]),ve=I(this.hass,t[h.childLock]),we=I(this.hass,t[h.remoteControl]),xe=l?_e(this.hass,l.state,l.attributes.unit_of_measurement):"",Ae=a?_e(this.hass,a.state,a.attributes.unit_of_measurement):"",at=["drum",d?"running":""].filter(Boolean).join(" ");return u`
       <ha-card class=${g?"finished":""}>
         <div class="card">
           ${this.renderHeader(e,Q,n,st)}
