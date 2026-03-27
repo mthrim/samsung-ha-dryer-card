@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.5.4 — 2026-03-27
+- `dryer-card.js` — finished/stopped status now correlates with green state: green → "Finished" / "Cycle complete", not green → "Stopped"
+
 ## v0.5.2 — 2026-03-27
 - `dryer-card-constants.js` — added `show_child_lock` config option (default: true)
 - `dryer-card.js` — child lock chip conditionally rendered based on `show_child_lock` toggle

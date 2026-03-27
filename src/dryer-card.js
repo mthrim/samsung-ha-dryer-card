@@ -701,10 +701,16 @@ export class SamsungHADryerCard extends LitElement {
     const isGreen = wrinklePreventActive || isFinishedRecently(machineStateEntity, config.finished_green_duration);
     const primaryStatus = wrinklePreventActive
       ? "Finished"
-      : getPrimaryStatus(machineState, jobState);
+      : isStopped && isGreen
+        ? "Finished"
+        : isStopped && !isGreen
+          ? "Stopped"
+          : getPrimaryStatus(machineState, jobState);
     const secondaryStatus = wrinklePreventActive
       ? "Wrinkle Prevent"
-      : getSecondaryStatus(machineState, jobState);
+      : isStopped && isGreen
+        ? "Cycle complete"
+        : getSecondaryStatus(machineState, jobState);
 
     const showCompletion =
       !wrinklePreventActive &&
