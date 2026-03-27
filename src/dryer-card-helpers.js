@@ -85,11 +85,15 @@ export function getPrimaryStatus(machineState, jobState) {
     return JOB_STATE_LABELS[jobState] || MACHINE_STATE_LABELS[machineState] || "Running";
   }
 
-  if (machineState === "stop") {
+  if (machineState === "stop" && jobState === "finished") {
     return "Finished";
   }
 
-  return MACHINE_STATE_LABELS[machineState] || titleCaseLabel(machineState) || "Finished";
+  if (machineState === "stop" && jobState && jobState !== "none") {
+    return JOB_STATE_LABELS[jobState] || "Stopped";
+  }
+
+  return MACHINE_STATE_LABELS[machineState] || titleCaseLabel(machineState) || "Stopped";
 }
 
 export function getSecondaryStatus(machineState, jobState) {
