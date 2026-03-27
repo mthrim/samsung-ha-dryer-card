@@ -77,6 +77,10 @@ export function titleCaseLabel(value) {
 }
 
 export function getPrimaryStatus(machineState, jobState) {
+  if (isUnavailable(machineState)) {
+    return "Idle";
+  }
+
   if (machineState === "pause") {
     return "Paused";
   }
@@ -97,6 +101,10 @@ export function getPrimaryStatus(machineState, jobState) {
 }
 
 export function getSecondaryStatus(machineState, jobState) {
+  if (isUnavailable(machineState)) {
+    return "Standby";
+  }
+
   if (machineState === "pause" && jobState && jobState !== "none") {
     return JOB_STATE_LABELS[jobState] || titleCaseLabel(jobState);
   }
