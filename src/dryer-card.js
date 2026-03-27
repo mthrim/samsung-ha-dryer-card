@@ -623,13 +623,22 @@ export class SamsungHADryerCard extends LitElement {
     );
 
     const { isRunning, isPaused, isStopped } = this.getStateFlags(machineState);
-    const isGreen = isFinishedRecently(machineStateEntity, config.finished_green_duration);
-    const primaryStatus = isStopped && !isGreen
-      ? "Stopped"
-      : getPrimaryStatus(machineState, jobState);
-    const secondaryStatus = getSecondaryStatus(machineState, jobState);
+    const wrinklePreventActive = isOn(
+      this.hass,
+      entities[ENTITY_KEYS.wrinklePreventActive]
+    );
+    const isGreen = wrinklePreventActive || isFinishedRecently(machineStateEntity, config.finished_green_duration);
+    const primaryStatus = wrinklePreventActive
+      ? "Finished"
+      : isStopped && !isGreen
+        ? "Stopped"
+        : getPrimaryStatus(machineState, jobState);
+    const secondaryStatus = wrinklePreventActive
+      ? "Wrinkle Prevent"
+      : getSecondaryStatus(machineState, jobState);
 
     const showCompletion =
+      !wrinklePreventActive &&
       config.show_completion_time &&
       shouldShowCompletionTime(machineState, completion);
 
@@ -638,7 +647,7 @@ export class SamsungHADryerCard extends LitElement {
       : null;
 
     const drumProgressStyle = (() => {
-      if (!config.show_drum_progress || (!isRunning && !isPaused)) return null;
+      if (!config.show_drum_progress || (!isRunning && !isPaused) || wrinklePreventActive) return null;
       const pct = getCompletionPercent(powerState, completion);
       if (pct === null) return null;
       const color = config.drum_progress_color || "#5b9cf6";
@@ -661,11 +670,6 @@ export class SamsungHADryerCard extends LitElement {
 
       return style;
     })();
-
-    const wrinklePreventActive = isOn(
-      this.hass,
-      entities[ENTITY_KEYS.wrinklePreventActive]
-    );
 
     const wrinklePreventSwitchOn = isOn(
       this.hass,
