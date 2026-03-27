@@ -1,5 +1,33 @@
 # Changelog
 
+## v0.5.1 — 2026-03-27
+- `dryer-card.js` — state caching now backed by HA history API; fetches last known non-unavailable state from the last hour when no in-memory cache exists (e.g. fresh page load during outage)
+
+## v0.5.0 — 2026-03-27
+- `dryer-card.js` — in-memory state caching: when HA reports unavailable/unknown, card shows last known good state
+- `dryer-card.js` — stale indicator: card dims to 60% opacity + cloud-off icon next to title when data is stale
+- `dryer-card.js` — removed `isStopped && !isGreen` override; `getPrimaryStatus` now handles all stop states
+
+## v0.4.6 — 2026-03-27
+- `dryer-card-helpers.js` — reverted Idle/Standby fallback (replaced by state caching in v0.5.0)
+
+## v0.4.5 — 2026-03-27
+- `dryer-card-helpers.js` — restored nuanced `getPrimaryStatus` stop-state handling: stop+finished → "Finished", stop+active job → job label, stop+none → "Stopped"
+
+## v0.4.4 — 2026-03-27
+- `dryer-card-constants.js` — fixed job state key `"finish"` → `"finished"` to match actual HA enum (dryer uses `finished`)
+- `dryer-card-helpers.js` — fixed `"finish"` → `"finished"` in `getSecondaryStatus`
+
+## v0.4.3 — 2026-03-27
+- `dryer-card.js` — wrinkle prevent now treated as finished: card turns green, shows "Finished" / "Wrinkle Prevent", hides completion badge and drum progress
+
+## v0.4.2 — 2026-03-27
+- `dryer-card.js` — fixed progress circle: uses `transform: scale()` instead of oversized element; circle stays within drum boundary (140px)
+- `dryer-card.js` — added pulse animation when < 10 minutes remaining (3s pulse > 5min, gradually speeds to 0.75s near 0)
+
+## v0.4.1 — 2026-03-27
+- `dryer-card.js` — enlarged progress circle to 200px to extend beyond 140px drum (reverted in v0.4.2)
+
 ## v0.4.0 — 2026-03-27 (3)
 - `dryer-card-helpers.js` — added `formatCountdown()`: formats remaining time as `Xh Ym` (>=90min), `Xm` (<=90min), or `Xm Ys` (<10min)
 - `dryer-card.js` — added live countdown timer in hero section below primary status, with 1-second tick interval
