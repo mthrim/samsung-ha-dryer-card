@@ -13,7 +13,8 @@ import {
   formatNumber,
   getCompletionColor,
   getCompletionPercent,
-  formatCountdown
+  formatCountdown,
+  isUnavailable
 } from "./dryer-card-helpers";
 import { ENTITY_KEYS, CARD_TAG } from "./dryer-card-constants";
 import { setDryerCommand, toggleSwitch } from "./dryer-card-actions";
