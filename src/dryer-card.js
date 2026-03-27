@@ -137,6 +137,14 @@ export class SamsungHADryerCard extends LitElement {
       line-height: 1.2;
     }
 
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
     .status-badge {
       flex-shrink: 0;
       padding: 8px 12px;
@@ -516,7 +524,10 @@ export class SamsungHADryerCard extends LitElement {
     `;
   }
 
-  renderHeader(config, secondaryStatus) {
+  renderHeader(config, secondaryStatus, showCompletion, completion, completionColor) {
+    const completionStyle = completionColor
+      ? `color: ${completionColor};`
+      : "";
     return html`
       <div class="header">
         <div class="header-left">
@@ -530,16 +541,23 @@ export class SamsungHADryerCard extends LitElement {
               : ""}
           </div>
         </div>
-        <div class="status-badge">${secondaryStatus}</div>
+        <div class="header-right">
+          <div class="status-badge">${secondaryStatus}</div>
+          ${showCompletion
+            ? html`
+                <div class="completion" style=${completionStyle}>
+                  <ha-icon .icon=${config.icons.complete}></ha-icon>
+                  <span>Completes at ${formatTimestamp(this.hass, completion)}</span>
+                </div>
+              `
+            : ""}
+        </div>
       </div>
     `;
   }
 
-  renderHero(config, primaryStatus, secondaryStatus, showCompletion, completion, drumClass, completionColor, drumProgressStyle) {
+  renderHero(config, primaryStatus, drumClass, drumProgressStyle) {
     const heroClass = `hero ${config.layout_mode === "compact" ? "compact" : ""}`;
-    const completionStyle = completionColor
-      ? `color: ${completionColor};`
-      : "";
 
     return html`
       <div class=${heroClass}>
@@ -556,16 +574,6 @@ export class SamsungHADryerCard extends LitElement {
 
         <div class="hero-info">
           <div class="primary-status">${primaryStatus}</div>
-          <div class="secondary-status">${secondaryStatus}</div>
-
-          ${showCompletion
-            ? html`
-                <div class="completion" style=${completionStyle}>
-                  <ha-icon .icon=${config.icons.complete}></ha-icon>
-                  <span>Completes at ${formatTimestamp(this.hass, completion)}</span>
-                </div>
-              `
-            : ""}
         </div>
       </div>
     `;
@@ -662,16 +670,12 @@ export class SamsungHADryerCard extends LitElement {
     return html`
       <ha-card class=${isGreen ? "finished" : ""}>
         <div class="card">
-          ${this.renderHeader(config, secondaryStatus)}
+          ${this.renderHeader(config, secondaryStatus, showCompletion, completion, completionColor)}
 
           ${this.renderHero(
             config,
             primaryStatus,
-            secondaryStatus,
-            showCompletion,
-            completion,
             drumClass,
-            completionColor,
             drumProgressStyle
           )}
 
