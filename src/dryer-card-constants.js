@@ -46,7 +46,7 @@ export const JOB_STATE_LABELS = {
   cooling: "Cooling",
   delay_wash: "Delayed",
   drying: "Drying",
-  finish: "Finished",
+  finished: "Finished",
   none: "Idle",
   refreshing: "Refreshing",
   weight_sensing: "Sensing Load",
