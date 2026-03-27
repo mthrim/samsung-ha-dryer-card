@@ -462,6 +462,17 @@ export class SamsungHADryerCard extends LitElement {
       color: var(--secondary-text-color);
     }
 
+    .stale-icon {
+      --mdc-icon-size: 16px;
+      color: var(--warning-color, #ffa600);
+      vertical-align: middle;
+      margin-left: 4px;
+    }
+
+    ha-card.stale .card {
+      opacity: 0.6;
+    }
+
     ha-card.finished {
       background:
         radial-gradient(circle at top right, rgba(255, 255, 255, 0.10), transparent 30%),
@@ -536,7 +547,7 @@ export class SamsungHADryerCard extends LitElement {
     `;
   }
 
-  renderHeader(config, showCompletion, completion, completionColor) {
+  renderHeader(config, showCompletion, completion, completionColor, stale) {
     const completionStyle = completionColor
       ? `color: ${completionColor};`
       : "";
@@ -547,7 +558,7 @@ export class SamsungHADryerCard extends LitElement {
             <ha-icon .icon=${config.icons.appliance}></ha-icon>
           </div>
           <div class="header-text">
-            <div class="title">${config.title}</div>
+            <div class="title">${config.title}${stale ? html` <ha-icon class="stale-icon" .icon=${"mdi:cloud-off-outline"}></ha-icon>` : ""}</div>
             ${config.show_subtitle
               ? html`<div class="subtitle">Samsung SmartThings Dryer</div>`
               : ""}
@@ -600,27 +611,33 @@ export class SamsungHADryerCard extends LitElement {
     const config = this._config;
     const entities = buildEntityMap(config);
 
-    const machineStateEntity = getEntityState(
-      this.hass,
-      entities[ENTITY_KEYS.machineState]
-    );
-    const machineState = machineStateEntity ? machineStateEntity.state : undefined;
-    const jobState = getStateValue(
-      this.hass,
-      entities[ENTITY_KEYS.jobState]
-    );
-    const completion = getStateValue(
-      this.hass,
-      entities[ENTITY_KEYS.completionTime]
-    );
-    const powerState = getEntityState(
-      this.hass,
-      entities[ENTITY_KEYS.power]
-    );
-    const energyState = getEntityState(
-      this.hass,
-      entities[ENTITY_KEYS.cycleEnergy]
-    );
+    const rawMachineStateEntity = getEntityState(this.hass, entities[ENTITY_KEYS.machineState]);
+    const rawMachineState = rawMachineStateEntity ? rawMachineStateEntity.state : undefined;
+    const rawJobState = getStateValue(this.hass, entities[ENTITY_KEYS.jobState]);
+    const rawCompletion = getStateValue(this.hass, entities[ENTITY_KEYS.completionTime]);
+    const rawPowerState = getEntityState(this.hass, entities[ENTITY_KEYS.power]);
+    const rawEnergyState = getEntityState(this.hass, entities[ENTITY_KEYS.cycleEnergy]);
+
+    const stale = isUnavailable(rawMachineState);
+
+    if (!stale) {
+      this._cachedState = {
+        machineStateEntity: rawMachineStateEntity,
+        machineState: rawMachineState,
+        jobState: rawJobState,
+        completion: rawCompletion,
+        powerState: rawPowerState,
+        energyState: rawEnergyState,
+      };
+    }
+
+    const cached = stale && this._cachedState ? this._cachedState : null;
+    const machineStateEntity = cached ? cached.machineStateEntity : rawMachineStateEntity;
+    const machineState = cached ? cached.machineState : rawMachineState;
+    const jobState = cached ? cached.jobState : rawJobState;
+    const completion = cached ? cached.completion : rawCompletion;
+    const powerState = cached ? cached.powerState : rawPowerState;
+    const energyState = cached ? cached.energyState : rawEnergyState;
 
     const { isRunning, isPaused, isStopped } = this.getStateFlags(machineState);
     const wrinklePreventActive = isOn(
@@ -630,9 +647,7 @@ export class SamsungHADryerCard extends LitElement {
     const isGreen = wrinklePreventActive || isFinishedRecently(machineStateEntity, config.finished_green_duration);
     const primaryStatus = wrinklePreventActive
       ? "Finished"
-      : isStopped && !isGreen
-        ? "Stopped"
-        : getPrimaryStatus(machineState, jobState);
+      : getPrimaryStatus(machineState, jobState);
     const secondaryStatus = wrinklePreventActive
       ? "Wrinkle Prevent"
       : getSecondaryStatus(machineState, jobState);
@@ -700,9 +715,9 @@ export class SamsungHADryerCard extends LitElement {
       .join(" ");
 
     return html`
-      <ha-card class=${isGreen ? "finished" : ""}>
+      <ha-card class=${[isGreen ? "finished" : "", stale ? "stale" : ""].filter(Boolean).join(" ")}>
         <div class="card">
-          ${this.renderHeader(config, showCompletion, completion, completionColor)}
+          ${this.renderHeader(config, showCompletion, completion, completionColor, stale)}
 
           ${this.renderHero(
             config,
