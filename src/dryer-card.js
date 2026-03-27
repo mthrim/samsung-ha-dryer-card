@@ -180,7 +180,6 @@ export class SamsungHADryerCard extends LitElement {
       border-radius: 50%;
       opacity: 0.55;
       pointer-events: none;
-      z-index: 2;
     }
 
     .hero.compact .drum-progress {
@@ -622,7 +621,8 @@ export class SamsungHADryerCard extends LitElement {
       const pct = getCompletionPercent(powerState, completion);
       if (pct === null) return null;
       const color = config.drum_progress_color || "#5b9cf6";
-      const filled = 100 - pct;
+      const raw = 100 - pct;
+      const filled = 10 + raw * 0.9;
       return `background: radial-gradient(circle, ${color} ${filled}%, transparent ${filled}%);`;
     })();
 
