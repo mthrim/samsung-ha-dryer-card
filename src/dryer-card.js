@@ -180,6 +180,7 @@ export class SamsungHADryerCard extends LitElement {
       border-radius: 50%;
       opacity: 0.55;
       pointer-events: none;
+      z-index: 2;
     }
 
     .hero.compact .drum-progress {
