@@ -12,7 +12,8 @@ import {
   formatTimestamp,
   formatNumber,
   getCompletionColor,
-  getCompletionPercent
+  getCompletionPercent,
+  formatCountdown
 } from "./dryer-card-helpers";
 import { ENTITY_KEYS, CARD_TAG } from "./dryer-card-constants";
 import { setDryerCommand, toggleSwitch } from "./dryer-card-actions";
@@ -48,6 +49,19 @@ export class SamsungHADryerCard extends LitElement {
     }
 
     this._config = mergeConfig(config);
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._tickInterval = setInterval(() => this.requestUpdate(), 1000);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this._tickInterval) {
+      clearInterval(this._tickInterval);
+      this._tickInterval = null;
+    }
   }
 
   getCardSize() {
@@ -137,27 +151,6 @@ export class SamsungHADryerCard extends LitElement {
       line-height: 1.2;
     }
 
-    .header-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-
-    .status-badge {
-      flex-shrink: 0;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--primary-text-color);
-      font-size: 0.78rem;
-      font-weight: 700;
-      line-height: 1;
-      white-space: nowrap;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
 
     .hero {
       display: grid;
@@ -296,29 +289,40 @@ export class SamsungHADryerCard extends LitElement {
       margin-bottom: 4px;
     }
 
+    .countdown {
+      font-size: 1.4rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 4px;
+      color: var(--primary-text-color);
+    }
+
+    .hero.compact .countdown {
+      font-size: 1.1rem;
+    }
+
     .secondary-status {
       color: var(--secondary-text-color);
-      font-size: 0.96rem;
+      font-size: 0.88rem;
       line-height: 1.35;
-      margin-bottom: 12px;
     }
 
     .hero.compact .secondary-status {
-      font-size: 0.88rem;
-      margin-bottom: 8px;
+      font-size: 0.82rem;
     }
 
     .completion {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      min-height: 34px;
-      padding: 0 12px;
+      min-height: 38px;
+      padding: 0 14px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.08);
-      font-size: 0.84rem;
+      font-size: 0.92rem;
       font-weight: 600;
       color: var(--primary-text-color);
+      flex-shrink: 0;
     }
 
     .completion ha-icon {
@@ -524,7 +528,7 @@ export class SamsungHADryerCard extends LitElement {
     `;
   }
 
-  renderHeader(config, secondaryStatus, showCompletion, completion, completionColor) {
+  renderHeader(config, showCompletion, completion, completionColor) {
     const completionStyle = completionColor
       ? `color: ${completionColor};`
       : "";
@@ -541,22 +545,19 @@ export class SamsungHADryerCard extends LitElement {
               : ""}
           </div>
         </div>
-        <div class="header-right">
-          <div class="status-badge">${secondaryStatus}</div>
-          ${showCompletion
-            ? html`
-                <div class="completion" style=${completionStyle}>
-                  <ha-icon .icon=${config.icons.complete}></ha-icon>
-                  <span>Completes at ${formatTimestamp(this.hass, completion)}</span>
-                </div>
-              `
-            : ""}
-        </div>
+        ${showCompletion
+          ? html`
+              <div class="completion" style=${completionStyle}>
+                <ha-icon .icon=${config.icons.complete}></ha-icon>
+                <span>Completes at ${formatTimestamp(this.hass, completion)}</span>
+              </div>
+            `
+          : ""}
       </div>
     `;
   }
 
-  renderHero(config, primaryStatus, drumClass, drumProgressStyle) {
+  renderHero(config, primaryStatus, secondaryStatus, countdown, drumClass, drumProgressStyle) {
     const heroClass = `hero ${config.layout_mode === "compact" ? "compact" : ""}`;
 
     return html`
@@ -574,6 +575,10 @@ export class SamsungHADryerCard extends LitElement {
 
         <div class="hero-info">
           <div class="primary-status">${primaryStatus}</div>
+          ${countdown
+            ? html`<div class="countdown">${countdown}</div>`
+            : ""}
+          <div class="secondary-status">${secondaryStatus}</div>
         </div>
       </div>
     `;
@@ -670,11 +675,13 @@ export class SamsungHADryerCard extends LitElement {
     return html`
       <ha-card class=${isGreen ? "finished" : ""}>
         <div class="card">
-          ${this.renderHeader(config, secondaryStatus, showCompletion, completion, completionColor)}
+          ${this.renderHeader(config, showCompletion, completion, completionColor)}
 
           ${this.renderHero(
             config,
             primaryStatus,
+            secondaryStatus,
+            showCompletion ? formatCountdown(completion) : null,
             drumClass,
             drumProgressStyle
           )}
