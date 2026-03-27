@@ -817,7 +817,7 @@ export class SamsungHADryerCard extends LitElement {
           <div class="controls">
             <button
               class="control-btn primary"
-              ?disabled=${isRunning}
+              ?disabled=${isRunning || !remoteOn}
               @click=${() =>
                 setDryerCommand(this, entities[ENTITY_KEYS.command], "run")}
             >
@@ -825,7 +825,7 @@ export class SamsungHADryerCard extends LitElement {
             </button>
             <button
               class="control-btn"
-              ?disabled=${isPaused || isStopped}
+              ?disabled=${isPaused || isStopped || !remoteOn}
               @click=${() =>
                 setDryerCommand(this, entities[ENTITY_KEYS.command], "pause")}
             >
@@ -833,7 +833,7 @@ export class SamsungHADryerCard extends LitElement {
             </button>
             <button
               class="control-btn"
-              ?disabled=${isStopped}
+              ?disabled=${isStopped || !remoteOn}
               @click=${() =>
                 setDryerCommand(this, entities[ENTITY_KEYS.command], "stop")}
             >
@@ -841,7 +841,7 @@ export class SamsungHADryerCard extends LitElement {
             </button>
           </div>
 
-          ${config.show_wrinkle_prevent_control
+          ${config.show_wrinkle_prevent_control && !isStopped
             ? html`
                 <button
                   class="toggle-btn ${wrinklePreventSwitchOn ? "active" : ""}"

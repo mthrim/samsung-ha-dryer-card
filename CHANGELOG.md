@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.5 — 2026-03-27
+- `dryer-card.js` — disable Start/Pause/Stop buttons when remote control is off
+- `dryer-card.js` — hide wrinkle prevent toggle when dryer is stopped
+
 ## v0.5.4 — 2026-03-27
 - `dryer-card.js` — finished/stopped status now correlates with green state: green → "Finished" / "Cycle complete", not green → "Stopped"
 
