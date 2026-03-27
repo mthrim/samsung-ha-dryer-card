@@ -18,6 +18,7 @@ const BOOLEAN_FIELDS = [
   { key: "show_subtitle", label: "Show subtitle" },
   { key: "show_completion_time", label: "Show completion time" },
   { key: "show_status_chips", label: "Show status chips" },
+  { key: "show_child_lock", label: "Show child lock badge" },
   { key: "show_power", label: "Show power" },
   { key: "show_energy", label: "Show cycle energy" },
   { key: "show_wrinkle_prevent_control", label: "Show wrinkle prevent control" },

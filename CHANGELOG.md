@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.5.2 — 2026-03-27
+- `dryer-card-constants.js` — added `show_child_lock` config option (default: true)
+- `dryer-card.js` — child lock chip conditionally rendered based on `show_child_lock` toggle
+- `dryer-card-editor.js` — added "Show child lock badge" toggle in Display Options
+
 ## v0.5.1 — 2026-03-27
 - `dryer-card.js` — state caching now backed by HA history API; fetches last known non-unavailable state from the last hour when no in-memory cache exists (e.g. fresh page load during outage)
 

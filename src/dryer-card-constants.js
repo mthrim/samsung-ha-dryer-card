@@ -7,6 +7,7 @@ export const DEFAULT_CONFIG = {
   layout_mode: "hero",
   show_completion_time: true,
   show_status_chips: true,
+  show_child_lock: true,
   show_power: true,
   show_energy: true,
   show_wrinkle_prevent_control: true,
