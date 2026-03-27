@@ -622,7 +622,7 @@ export class SamsungHADryerCard extends LitElement {
       if (pct === null) return null;
       const color = config.drum_progress_color || "#5b9cf6";
       const filled = 100 - pct;
-      return `background: conic-gradient(from -90deg, ${color} ${filled}%, transparent ${filled}%);`;
+      return `background: radial-gradient(circle, ${color} ${filled}%, transparent ${filled}%);`;
     })();
 
     const wrinklePreventActive = isOn(
