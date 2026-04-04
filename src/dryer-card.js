@@ -594,7 +594,7 @@ export class SamsungHADryerCard extends LitElement {
     `;
   }
 
-  renderHeader(config, showCompletion, completion, completionColor, stale) {
+  renderHeader(config, showCompletion, completion, completionColor, stale, finishedAt) {
     const completionStyle = completionColor
       ? `color: ${completionColor};`
       : "";
@@ -618,7 +618,14 @@ export class SamsungHADryerCard extends LitElement {
                 <span>Completes at ${formatTimestamp(this.hass, completion)}</span>
               </div>
             `
-          : ""}
+          : finishedAt
+            ? html`
+                <div class="completion">
+                  <ha-icon .icon=${"mdi:check-circle-outline"}></ha-icon>
+                  <span>Finished at ${finishedAt}</span>
+                </div>
+              `
+            : ""}
       </div>
     `;
   }
@@ -721,6 +728,10 @@ export class SamsungHADryerCard extends LitElement {
       ? getCompletionColor(powerState, completion, config)
       : null;
 
+    const finishedAt = !showCompletion && isGreen && machineStateEntity?.last_changed
+      ? formatTimestamp(this.hass, machineStateEntity.last_changed)
+      : null;
+
     const drumProgressStyle = (() => {
       if (!config.show_drum_progress || (!isRunning && !isPaused) || wrinklePreventActive) return null;
       const pct = getCompletionPercent(powerState, completion);
@@ -777,7 +788,7 @@ export class SamsungHADryerCard extends LitElement {
     return html`
       <ha-card class=${[isGreen ? "finished" : "", stale ? "stale" : ""].filter(Boolean).join(" ")}>
         <div class="card">
-          ${this.renderHeader(config, showCompletion, completion, completionColor, stale)}
+          ${this.renderHeader(config, showCompletion, completion, completionColor, stale, finishedAt)}
 
           ${this.renderHero(
             config,

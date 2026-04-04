@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.6 — 2026-04-04
+- `dryer-card.js` — show "Finished at [time]" badge in header when cycle is complete (green state) and no running completion time is displayed; uses `machineStateEntity.last_changed` timestamp
+- Cleaned up stale duplicate files from `src/` (remnants of nested repo)
+
 ## v0.5.5 — 2026-03-27
 - `dryer-card.js` — disable Start/Pause/Stop buttons when remote control is off
 - `dryer-card.js` — hide wrinkle prevent toggle when dryer is stopped
